@@ -12,5 +12,8 @@ func NewBall(renderer *sdl.Renderer) *Entity {
 	spriteComponent := NewSpriteComponent(ball, renderer, "assets/ball.png", sdl.Point{X: 0, Y: 0})
 	ball.AddComponent(spriteComponent)
 
+	shadowComponent := NewShadowComponent(ball, renderer, "assets/shadow.png", sdl.Point{X: 0, Y: 0})
+	ball.AddComponent(shadowComponent)
+
 	return ball
 }

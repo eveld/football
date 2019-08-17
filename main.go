@@ -94,10 +94,9 @@ func main() {
 	defer renderer.Destroy()
 
 	world := NewWorld(renderer)
-	entities = append(entities, world)
-
 	ball := NewBall(renderer)
-	entities = append(entities, ball)
+
+	entities = append(entities, world, ball)
 
 	for running == true {
 		handleEvents()
