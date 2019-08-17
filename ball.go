@@ -6,13 +6,13 @@ import "github.com/veandco/go-sdl2/sdl"
 func NewBall(renderer *sdl.Renderer) *Entity {
 	ball := &Entity{}
 
-	transformComponent := NewTransformComponent(ball, Vector3{X: screenWidth / 2, Y: screenHeight / 2, Z: 50}, Vector3{X: 32, Y: 0, Z: 32}, 0)
+	transformComponent := NewTransformComponent(ball, Vector3{X: 400, Y: screenHeight / 2, Z: 10}, Vector3{X: 28, Y: 0, Z: 28}, Vector3{X: 14, Y: 14, Z: 28}, 0)
 	ball.AddComponent(transformComponent)
 
-	shadowComponent := NewShadowComponent(ball, renderer, "assets/shadow.png", sdl.Point{X: 0, Y: 0})
+	shadowComponent := NewShadowComponent(ball, renderer, "assets/shadow.png")
 	ball.AddComponent(shadowComponent)
 
-	spriteComponent := NewSpriteComponent(ball, renderer, "assets/ball.png", sdl.Point{X: 0, Y: 0})
+	spriteComponent := NewSpriteComponent(ball, renderer, "assets/ball.png")
 	ball.AddComponent(spriteComponent)
 
 	return ball

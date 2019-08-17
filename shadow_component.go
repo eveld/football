@@ -10,15 +10,17 @@ type ShadowComponent struct {
 	Parent  *Entity
 	Texture *sdl.Texture
 	Rect    sdl.Rect
-	Origin  sdl.Point
 }
 
 // NewShadowComponent creates a new shadow.
-func NewShadowComponent(parent *Entity, renderer *sdl.Renderer, file string, origin sdl.Point) *ShadowComponent {
+func NewShadowComponent(parent *Entity, renderer *sdl.Renderer, file string) *ShadowComponent {
 	texture, err := TextureFromPNG(renderer, file)
 	if err != nil {
 		panic(err)
 	}
+
+	texture.SetBlendMode(sdl.BLENDMODE_BLEND)
+	texture.SetAlphaMod(190)
 
 	_, _, width, height, err := texture.Query()
 	if err != nil {
@@ -30,7 +32,6 @@ func NewShadowComponent(parent *Entity, renderer *sdl.Renderer, file string, ori
 		Parent:  parent,
 		Texture: texture,
 		Rect:    sdl.Rect{X: 0, Y: 0, W: width, H: height},
-		Origin:  origin,
 	}
 
 	return shadowComponent
@@ -44,8 +45,14 @@ func (c *ShadowComponent) GetID() ComponentID {
 // Draw the scene.
 func (c *ShadowComponent) Draw(renderer *sdl.Renderer) error {
 	transform := c.Parent.GetComponent(&TransformComponent{}).(*TransformComponent)
-	x := transform.Position.X + (transform.Size.X-c.Rect.W)/2
-	y := transform.Position.Y + (transform.Size.Z - c.Rect.H)
+
+	// If the entity is on the floor, don't show a shadow.
+	if transform.Position.Z == 0 {
+		return nil
+	}
+
+	x := transform.Position.X - transform.Origin.X + c.Rect.W/2
+	y := transform.Position.Y + (transform.Size.Z - c.Rect.H) - transform.Origin.Z
 	angle := transform.Rotation
 
 	renderer.CopyEx(
@@ -53,7 +60,7 @@ func (c *ShadowComponent) Draw(renderer *sdl.Renderer) error {
 		&c.Rect,
 		&sdl.Rect{X: x, Y: y, W: c.Rect.W, H: c.Rect.H},
 		angle,
-		&sdl.Point{X: c.Origin.X, Y: c.Origin.Y},
+		&sdl.Point{X: x, Y: y},
 		sdl.FLIP_NONE,
 	)
 

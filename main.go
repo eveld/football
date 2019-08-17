@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 
 	"github.com/veandco/go-sdl2/sdl"
 )
@@ -73,6 +74,8 @@ func draw(renderer *sdl.Renderer) error {
 	renderer.SetDrawColor(255, 255, 255, 255)
 	renderer.Clear()
 
+	// TODO: add z-index ordering of entities and draw then back to front.
+
 	for _, entity := range entities {
 		err := entity.Draw(renderer)
 		if err != nil {
@@ -95,8 +98,17 @@ func main() {
 
 	world := NewWorld(renderer)
 	ball := NewBall(renderer)
-
 	entities = append(entities, world, ball)
+
+	for i := 0; i < 1; i++ {
+		rand.Seed(int64(i))
+		x := int32(rand.Intn(int(screenWidth)))
+		y := int32(rand.Intn(int(screenHeight)))
+		fmt.Printf("x: %d / y: %d", x, y)
+
+		player := NewPlayer(renderer, Vector3{X: x, Y: y, Z: 0})
+		entities = append(entities, player)
+	}
 
 	for running == true {
 		handleEvents()

@@ -11,11 +11,10 @@ type SpriteComponent struct {
 	Parent  *Entity
 	Texture *sdl.Texture
 	Rect    sdl.Rect
-	Origin  sdl.Point
 }
 
 // NewSpriteComponent creates a new sprite renderer.
-func NewSpriteComponent(parent *Entity, renderer *sdl.Renderer, file string, origin sdl.Point) *SpriteComponent {
+func NewSpriteComponent(parent *Entity, renderer *sdl.Renderer, file string) *SpriteComponent {
 	texture, err := TextureFromPNG(renderer, file)
 	if err != nil {
 		panic(err)
@@ -31,7 +30,6 @@ func NewSpriteComponent(parent *Entity, renderer *sdl.Renderer, file string, ori
 		Parent:  parent,
 		Texture: texture,
 		Rect:    sdl.Rect{X: 0, Y: 0, W: width, H: height},
-		Origin:  origin,
 	}
 
 	return spriteComponent
@@ -45,16 +43,17 @@ func (c *SpriteComponent) GetID() ComponentID {
 // Draw the scene.
 func (c *SpriteComponent) Draw(renderer *sdl.Renderer) error {
 	transform := c.Parent.GetComponent(&TransformComponent{}).(*TransformComponent)
-	x := transform.Position.X - c.Origin.X
-	y := transform.Position.Y - transform.Position.Z - c.Origin.Y
+	x := transform.Position.X - transform.Origin.X
+	y := transform.Position.Y - transform.Position.Z - transform.Origin.Z
 	angle := transform.Rotation
+	center := &sdl.Point{X: transform.Origin.X, Y: transform.Origin.Z}
 
 	renderer.CopyEx(
 		c.Texture,
 		&c.Rect,
 		&sdl.Rect{X: x, Y: y, W: c.Rect.W, H: c.Rect.H},
 		angle,
-		&sdl.Point{X: c.Origin.X, Y: c.Origin.Y},
+		center,
 		sdl.FLIP_NONE,
 	)
 
