@@ -6,16 +6,18 @@ import "github.com/veandco/go-sdl2/sdl"
 type TransformComponent struct {
 	ID       ComponentID
 	Parent   *Entity
-	Bounds   sdl.Rect
+	Position Vector3
+	Size     Vector3
 	Rotation float64
 }
 
 // NewTransformComponent creates a new transform component.
-func NewTransformComponent(parent *Entity, bounds sdl.Rect, rotation float64) *TransformComponent {
+func NewTransformComponent(parent *Entity, position Vector3, size Vector3, rotation float64) *TransformComponent {
 	transformComponent := &TransformComponent{
 		ID:       "transform",
 		Parent:   parent,
-		Bounds:   bounds,
+		Position: position,
+		Size:     size,
 		Rotation: rotation,
 	}
 	return transformComponent
@@ -24,6 +26,16 @@ func NewTransformComponent(parent *Entity, bounds sdl.Rect, rotation float64) *T
 // GetID gets the ID of the component.
 func (c *TransformComponent) GetID() ComponentID {
 	return c.ID
+}
+
+// GetBounds returns the bounds of the entity.
+func (c *TransformComponent) GetBounds() sdl.Rect {
+	return sdl.Rect{
+		X: c.Position.X,
+		Y: c.Position.Y,
+		W: c.Size.X,
+		H: c.Size.Z,
+	}
 }
 
 // Draw the component.

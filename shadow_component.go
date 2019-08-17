@@ -44,8 +44,8 @@ func (c *ShadowComponent) GetID() ComponentID {
 // Draw the scene.
 func (c *ShadowComponent) Draw(renderer *sdl.Renderer) error {
 	transform := c.Parent.GetComponent(&TransformComponent{}).(*TransformComponent)
-	x := transform.Bounds.X - c.Origin.X
-	y := transform.Bounds.Y - c.Origin.Y
+	x := transform.Position.X + (transform.Size.X-c.Rect.W)/2
+	y := transform.Position.Y + (transform.Size.Z - c.Rect.H)
 	angle := transform.Rotation
 
 	renderer.CopyEx(

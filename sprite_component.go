@@ -45,8 +45,8 @@ func (c *SpriteComponent) GetID() ComponentID {
 // Draw the scene.
 func (c *SpriteComponent) Draw(renderer *sdl.Renderer) error {
 	transform := c.Parent.GetComponent(&TransformComponent{}).(*TransformComponent)
-	x := transform.Bounds.X - c.Origin.X
-	y := transform.Bounds.Y - c.Origin.Y
+	x := transform.Position.X - c.Origin.X
+	y := transform.Position.Y - transform.Position.Z - c.Origin.Y
 	angle := transform.Rotation
 
 	renderer.CopyEx(

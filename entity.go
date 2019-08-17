@@ -7,6 +7,11 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
+// Vector3 holds 3 positions x, y, z.
+type Vector3 struct {
+	X, Y, Z int32
+}
+
 // Entity represents the most basic element.
 type Entity struct {
 	Active     bool
