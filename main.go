@@ -96,6 +96,9 @@ func main() {
 	world := NewWorld(renderer)
 	entities = append(entities, world)
 
+	ball := NewBall(renderer)
+	entities = append(entities, ball)
+
 	for running == true {
 		handleEvents()
 		err = update()
